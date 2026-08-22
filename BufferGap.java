@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -6,7 +5,7 @@ public class BufferGap<T> implements Iterable<T> {
 
 	// constantes
 	// tamaño inicial del buffer
-	private final int TAM_INICIAL = 2;
+	private final int TAM_INICIAL = 16;
 
 	// atributos indispensables
 	private int inicioHueco;
@@ -93,9 +92,15 @@ public class BufferGap<T> implements Iterable<T> {
 		// Verificar que el cursor no se salga de array por ninguno de los dos lados
 		if ((this.inicioHueco + delta) < 0 || (delta + this.finHueco) > this.capacidad()) {
 			// arrojar el error pedido
-			throw new PosicionInvalidaException("Posicion invalida para el indice.");
+			throw new PosicionInvalidaException("Posicion invalida para el indice, el cursor no puede moverse a esa posicion");
 		}
 		// mover todos los elementos como corresponde
+		if (delta > 0) {
+			for (int i = 0; i < delta; i++) {
+
+				this.datos[this.inicioHueco + i] = this.datos[this.finHueco + i];
+			}
+		}
 		if (delta < 0) {
 			for (int i = 0; i > delta; i--) {
 				// es -1 porque el pdf lo explica, los indices del hueco serian algo como [ini,
